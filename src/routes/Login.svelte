@@ -21,3 +21,4 @@
       <input type="password" bind:value={password} placeholder="Password" required>
       <button type="submit">Login</button>
     </form>
+    <p>Don't have an account? <a href="/register">Register</a></p>

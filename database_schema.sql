@@ -87,12 +87,13 @@ CREATE TABLE MultiMatchRequirements (
     FOREIGN KEY (RequirementID) REFERENCES Requirements(RequirementID)
 );
 
--- Users table
+-- Users table (updated schema)
 CREATE TABLE Users (
     UserID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     Username VARCHAR(50) NOT NULL,
     PasswordHash VARCHAR(255) NOT NULL,
     Email VARCHAR(100) NOT NULL,
+    GamingPlatform VARCHAR(10) CHECK (GamingPlatform IN ('console', 'pc')),
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     LastLogin TIMESTAMP,
     UNIQUE (Username),
