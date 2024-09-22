@@ -4,27 +4,39 @@
     import Login from "./Login.svelte";
     import Objectives from "./Objectives.svelte";
     import ProtectedRoute from "../components/ProtectedRoute.svelte";
+    import Logout from "../components/Logout.svelte";
+    import { auth } from '../stores/auth';
     
     export let url = "";
+    
+    let isLoggedIn = false;
+    
+    auth.subscribe(user => {
+      isLoggedIn = !!user;
+    });
     </script>
     
     <Router {url}>
       <nav>
         <a href="/">Home</a>
-        <a href="/login">Login</a>
-        <a href="/objectives">Objectives</a>
+        {#if isLoggedIn}
+          <a href="/objectives">Objectives</a>
+          <Logout />
+        {:else}
+          <a href="/login">Login</a>
+        {/if}
       </nav>
     
       <main>
-        <Route path="/" let:component>
-          <svelte:component this={Home} />
+        <Route path="/">
+          <Home />
         </Route>
-        <Route path="/login" let:component>
-          <svelte:component this={Login} />
+        <Route path="/login">
+          <Login />
         </Route>
-        <Route path="/objectives" let:component>
+        <Route path="/objectives">
           <ProtectedRoute>
-            <svelte:component this={Objectives} />
+            <Objectives />
           </ProtectedRoute>
         </Route>
       </main>

@@ -2,16 +2,21 @@
     import { auth } from '../stores/auth';
     import { navigate } from 'svelte-routing';
     import { onMount } from 'svelte';
-  
+    
+    let isAuthenticated = false;
+    
     onMount(() => {
       const unsubscribe = auth.subscribe(user => {
-        if (!user) {
-          navigate('/login');
+        isAuthenticated = !!user;
+        if (!isAuthenticated) {
+          navigate('/login', { replace: true });
         }
       });
-  
+    
       return unsubscribe;
     });
-  </script>
-  
-  <slot />
+    </script>
+    
+    {#if isAuthenticated}
+      <slot />
+    {/if}

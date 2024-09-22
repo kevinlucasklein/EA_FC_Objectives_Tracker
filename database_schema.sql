@@ -1,6 +1,8 @@
+-- Create Tables
+
 -- Rewards table
 CREATE TABLE Rewards (
-    RewardID INT PRIMARY KEY,
+    RewardID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     Type VARCHAR(50),
     Value INT,
     Description TEXT,
@@ -9,13 +11,13 @@ CREATE TABLE Rewards (
 
 -- Objective Types table
 CREATE TABLE ObjectiveTypes (
-    TypeID INT PRIMARY KEY,
+    TypeID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     Name VARCHAR(100)
 );
 
 -- Objective Groups table
 CREATE TABLE ObjectiveGroups (
-    GroupID INT PRIMARY KEY,
+    GroupID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     TypeID INT,
     Name VARCHAR(100),
     StartTime TIMESTAMP NULL,
@@ -25,7 +27,7 @@ CREATE TABLE ObjectiveGroups (
 
 -- Objectives table
 CREATE TABLE Objectives (
-    ObjectiveID INT PRIMARY KEY,
+    ObjectiveID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     GroupID INT,
     Name VARCHAR(100),
     Description TEXT,
@@ -36,7 +38,7 @@ CREATE TABLE Objectives (
 
 -- Requirements table
 CREATE TABLE Requirements (
-    RequirementID INT PRIMARY KEY,
+    RequirementID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     ObjectiveID INT,
     Type VARCHAR(50),
     Value INT,
@@ -45,127 +47,157 @@ CREATE TABLE Requirements (
 
 -- Conditions table
 CREATE TABLE Conditions (
-    ConditionID INT PRIMARY KEY,
+    ConditionID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     RequirementID INT,
     Type VARCHAR(50),
     Value VARCHAR(100),
     FOREIGN KEY (RequirementID) REFERENCES Requirements(RequirementID)
 );
 
--- MultiMatchRequirements table
-CREATE TABLE MultiMatchRequirements (
-    MultiMatchID INT PRIMARY KEY,
-    RequirementID INT,
-    MatchCount INT,
-    FOREIGN KEY (RequirementID) REFERENCES Requirements(RequirementID)
-);
-
 -- Countries table
 CREATE TABLE Countries (
-    CountryID INT PRIMARY KEY,
+    CountryID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     Name VARCHAR(100)
 );
 
 -- Teams table
 CREATE TABLE Teams (
-    TeamID INT PRIMARY KEY,
+    TeamID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     Name VARCHAR(100),
     LeagueID INT
 );
 
--- ConditionCountries junction table
+-- PlayerAttributes table
+CREATE TABLE PlayerAttributes (
+    AttributeID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    Name VARCHAR(50)
+);
+
+-- GameModes table
+CREATE TABLE GameModes (
+    GameModeID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    Name VARCHAR(50)
+);
+
+-- MultiMatchRequirements table
+CREATE TABLE MultiMatchRequirements (
+    MultiMatchID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    RequirementID INT,
+    MatchCount INT,
+    FOREIGN KEY (RequirementID) REFERENCES Requirements(RequirementID)
+);
+
+-- Users table
+CREATE TABLE Users (
+    UserID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    Username VARCHAR(50) NOT NULL,
+    PasswordHash VARCHAR(255) NOT NULL,
+    Email VARCHAR(100) NOT NULL,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    LastLogin TIMESTAMP,
+    UNIQUE (Username),
+    UNIQUE (Email)
+);
+
+-- ConditionCountries table (Composite Primary Key)
 CREATE TABLE ConditionCountries (
-    ConditionID INT,
-    CountryID INT,
+    ConditionID INT NOT NULL,
+    CountryID INT NOT NULL,
     PRIMARY KEY (ConditionID, CountryID),
     FOREIGN KEY (ConditionID) REFERENCES Conditions(ConditionID),
     FOREIGN KEY (CountryID) REFERENCES Countries(CountryID)
 );
 
--- ConditionTeams junction table
+-- ConditionTeams table (Composite Primary Key)
 CREATE TABLE ConditionTeams (
-    ConditionID INT,
-    TeamID INT,
+    ConditionID INT NOT NULL,
+    TeamID INT NOT NULL,
     PRIMARY KEY (ConditionID, TeamID),
     FOREIGN KEY (ConditionID) REFERENCES Conditions(ConditionID),
     FOREIGN KEY (TeamID) REFERENCES Teams(TeamID)
 );
 
--- PlayerAttributes table
-CREATE TABLE PlayerAttributes (
-    AttributeID INT PRIMARY KEY,
-    Name VARCHAR(50)
-);
-
--- ConditionPlayerAttributes junction table
+-- ConditionPlayerAttributes table (Composite Primary Key)
 CREATE TABLE ConditionPlayerAttributes (
-    ConditionID INT,
-    AttributeID INT,
+    ConditionID INT NOT NULL,
+    AttributeID INT NOT NULL,
     MinValue INT,
     PRIMARY KEY (ConditionID, AttributeID),
     FOREIGN KEY (ConditionID) REFERENCES Conditions(ConditionID),
     FOREIGN KEY (AttributeID) REFERENCES PlayerAttributes(AttributeID)
 );
 
--- GameModes table
-CREATE TABLE GameModes (
-    GameModeID INT PRIMARY KEY,
-    Name VARCHAR(50)
-);
-
--- ObjectiveGameModes junction table
+-- ObjectiveGameModes table (Composite Primary Key)
 CREATE TABLE ObjectiveGameModes (
-    ObjectiveID INT,
-    GameModeID INT,
+    ObjectiveID INT NOT NULL,
+    GameModeID INT NOT NULL,
     PRIMARY KEY (ObjectiveID, GameModeID),
     FOREIGN KEY (ObjectiveID) REFERENCES Objectives(ObjectiveID),
     FOREIGN KEY (GameModeID) REFERENCES GameModes(GameModeID)
 );
 
--- Players table
-CREATE TABLE Players (
-    PlayerID INT PRIMARY KEY,
-    Name VARCHAR(100)
-);
-
--- PlayerProgress table
+-- PlayerProgress table (Composite Primary Key)
 CREATE TABLE PlayerProgress (
-    PlayerID INT,
-    ObjectiveID INT,
+    UserID INT NOT NULL,
+    ObjectiveID INT NOT NULL,
     Progress INT,
     Completed BOOLEAN,
     CompletionDate TIMESTAMP,
-    PRIMARY KEY (PlayerID, ObjectiveID),
-    FOREIGN KEY (PlayerID) REFERENCES Players(PlayerID),
+    PRIMARY KEY (UserID, ObjectiveID),
+    FOREIGN KEY (UserID) REFERENCES Users(UserID),
     FOREIGN KEY (ObjectiveID) REFERENCES Objectives(ObjectiveID)
 );
 
--- PlayerMultiMatchProgress table
-CREATE TABLE PlayerMultiMatchProgress (
-    PlayerID INT,
-    MultiMatchID INT,
-    MatchesCompleted INT,
-    GoalsScored INT,
-    PRIMARY KEY (PlayerID, MultiMatchID),
-    FOREIGN KEY (PlayerID) REFERENCES Players(PlayerID),
-    FOREIGN KEY (MultiMatchID) REFERENCES MultiMatchRequirements(MultiMatchID)
-);
-
--- PlayerGroupProgress table
+-- PlayerGroupProgress table (Composite Primary Key)
 CREATE TABLE PlayerGroupProgress (
-    PlayerID INT,
-    GroupID INT,
+    UserID INT NOT NULL,
+    GroupID INT NOT NULL,
     Completed BOOLEAN,
     CompletionDate TIMESTAMP,
-    PRIMARY KEY (PlayerID, GroupID),
-    FOREIGN KEY (PlayerID) REFERENCES Players(PlayerID),
+    PRIMARY KEY (UserID, GroupID),
+    FOREIGN KEY (UserID) REFERENCES Users(UserID),
     FOREIGN KEY (GroupID) REFERENCES ObjectiveGroups(GroupID)
 );
 
--- View to check objective completion status
+-- PlayerMultiMatchProgress table (Composite Primary Key)
+CREATE TABLE PlayerMultiMatchProgress (
+    UserID INT NOT NULL,
+    MultiMatchID INT NOT NULL,
+    MatchesCompleted INT,
+    GoalsScored INT,
+    PRIMARY KEY (UserID, MultiMatchID),
+    FOREIGN KEY (UserID) REFERENCES Users(UserID),
+    FOREIGN KEY (MultiMatchID) REFERENCES MultiMatchRequirements(MultiMatchID)
+);
+
+-- Create Views
+
+-- GroupCompletionStatus view
+CREATE VIEW GroupCompletionStatus AS
+SELECT
+    u.UserID,
+    og.GroupID,
+    og.Name AS GroupName,
+    ot.TypeID,
+    ot.Name AS TypeName,
+    CASE
+        WHEN BOOL_AND(COALESCE(pp.Completed, FALSE)) THEN TRUE
+        ELSE FALSE
+    END AS Completed,
+    MAX(pp.CompletionDate) AS CompletionDate
+FROM
+    Users u
+    CROSS JOIN ObjectiveGroups og
+    JOIN ObjectiveTypes ot ON og.TypeID = ot.TypeID
+    LEFT JOIN Objectives o ON og.GroupID = o.GroupID
+    LEFT JOIN PlayerProgress pp ON u.UserID = pp.UserID AND o.ObjectiveID = pp.ObjectiveID
+GROUP BY
+    u.UserID, og.GroupID, og.Name, ot.TypeID, ot.Name;
+
+-- ObjectiveCompletionStatus view
 CREATE VIEW ObjectiveCompletionStatus AS
-SELECT 
-    p.PlayerID,
+SELECT
+    u.UserID,
     o.ObjectiveID,
     o.Name AS ObjectiveName,
     og.GroupID,
@@ -175,34 +207,18 @@ SELECT
     pp.Progress,
     pp.Completed,
     pp.CompletionDate
-FROM Players p
-CROSS JOIN Objectives o
-LEFT JOIN PlayerProgress pp ON p.PlayerID = pp.PlayerID AND o.ObjectiveID = pp.ObjectiveID
-JOIN ObjectiveGroups og ON o.GroupID = og.GroupID
-JOIN ObjectiveTypes ot ON og.TypeID = ot.TypeID;
+FROM
+    Users u
+    CROSS JOIN Objectives o
+    LEFT JOIN PlayerProgress pp ON u.UserID = pp.UserID AND o.ObjectiveID = pp.ObjectiveID
+    JOIN ObjectiveGroups og ON o.GroupID = og.GroupID
+    JOIN ObjectiveTypes ot ON og.TypeID = ot.TypeID;
 
--- View to check group completion status
-CREATE VIEW GroupCompletionStatus AS
-SELECT 
-    p.PlayerID,
-    og.GroupID,
-    og.Name AS GroupName,
-    ot.TypeID,
-    ot.Name AS TypeName,
-    CASE 
-        WHEN BOOL_AND(COALESCE(pp.Completed, FALSE)) THEN TRUE
-        ELSE FALSE
-    END AS Completed,
-    MAX(pp.CompletionDate) AS CompletionDate
-FROM Players p
-CROSS JOIN ObjectiveGroups og
-JOIN ObjectiveTypes ot ON og.TypeID = ot.TypeID
-LEFT JOIN Objectives o ON og.GroupID = o.GroupID
-LEFT JOIN PlayerProgress pp ON p.PlayerID = pp.PlayerID AND o.ObjectiveID = pp.ObjectiveID
-GROUP BY p.PlayerID, og.GroupID, og.Name, ot.TypeID, ot.Name;
+-- Stored Procedures and Functions
 
+-- Function to update objective progress
 CREATE OR REPLACE FUNCTION UpdateObjectiveProgress(
-    p_PlayerID INT, 
+    p_UserID INT, 
     p_ObjectiveID INT, 
     p_Progress INT
 ) RETURNS BOOLEAN AS $$
@@ -219,16 +235,16 @@ BEGIN
     v_Completed := (p_Progress >= v_RequiredProgress);
     
     -- Update the progress
-    INSERT INTO PlayerProgress (PlayerID, ObjectiveID, Progress, Completed, CompletionDate)
-    VALUES (p_PlayerID, p_ObjectiveID, p_Progress, v_Completed, CASE WHEN v_Completed THEN NOW() ELSE NULL END)
-    ON CONFLICT (PlayerID, ObjectiveID) DO UPDATE SET
+    INSERT INTO PlayerProgress (UserID, ObjectiveID, Progress, Completed, CompletionDate)
+    VALUES (p_UserID, p_ObjectiveID, p_Progress, v_Completed, CASE WHEN v_Completed THEN NOW() ELSE NULL END)
+    ON CONFLICT (UserID, ObjectiveID) DO UPDATE SET
         Progress = p_Progress,
         Completed = v_Completed,
-        CompletionDate = CASE WHEN v_Completed AND PlayerProgress.Completed = false THEN NOW() ELSE PlayerProgress.CompletionDate END;
+        CompletionDate = CASE WHEN v_Completed AND PlayerProgress.Completed = FALSE THEN NOW() ELSE PlayerProgress.CompletionDate END;
     
     -- Update group completion if necessary
     IF v_Completed THEN
-        PERFORM UpdateGroupCompletion(p_PlayerID, p_ObjectiveID);
+        PERFORM UpdateGroupCompletion(p_UserID, p_ObjectiveID);
     END IF;
     
     RETURN v_Completed;
@@ -237,7 +253,7 @@ $$ LANGUAGE plpgsql;
 
 -- Procedure to update group completion
 CREATE OR REPLACE PROCEDURE UpdateGroupCompletion(
-    p_PlayerID INT,
+    p_UserID INT,
     p_ObjectiveID INT
 ) AS $$
 DECLARE
@@ -250,18 +266,18 @@ BEGIN
     WHERE ObjectiveID = p_ObjectiveID;
     
     -- Check if all objectives in the group are completed
-    SELECT BOOL_AND(Completed) INTO v_GroupCompleted
+    SELECT BOOL_AND(pp.Completed) INTO v_GroupCompleted
     FROM PlayerProgress pp
     JOIN Objectives o ON pp.ObjectiveID = o.ObjectiveID
-    WHERE pp.PlayerID = p_PlayerID AND o.GroupID = v_GroupID;
+    WHERE pp.UserID = p_UserID AND o.GroupID = v_GroupID;
     
     -- Update group completion status
     IF v_GroupCompleted THEN
-        INSERT INTO PlayerGroupProgress (PlayerID, GroupID, Completed, CompletionDate)
-        VALUES (p_PlayerID, v_GroupID, TRUE, NOW())
-        ON CONFLICT (PlayerID, GroupID) DO UPDATE SET
+        INSERT INTO PlayerGroupProgress (UserID, GroupID, Completed, CompletionDate)
+        VALUES (p_UserID, v_GroupID, TRUE, NOW())
+        ON CONFLICT (UserID, GroupID) DO UPDATE SET
             Completed = TRUE,
-            CompletionDate = CASE WHEN PlayerGroupProgress.Completed = false THEN NOW() ELSE PlayerGroupProgress.CompletionDate END;
+            CompletionDate = CASE WHEN PlayerGroupProgress.Completed = FALSE THEN NOW() ELSE PlayerGroupProgress.CompletionDate END;
     END IF;
 END;
 $$ LANGUAGE plpgsql;
