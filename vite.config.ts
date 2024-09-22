@@ -8,5 +8,10 @@ export default defineConfig({
       $lib: "/src/lib",
       $components: "/src/components",
     }
-  }
+  },
+  server: {
+    proxy: {
+      '/api': 'http://localhost:3000',
+    },
+  },
 })

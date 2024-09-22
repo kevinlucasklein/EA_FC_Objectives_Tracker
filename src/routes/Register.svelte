@@ -6,7 +6,7 @@
     let email = '';
     let password = '';
     let confirmPassword = '';
-    let platform = ''; // New variable for platform selection
+    let platform = '';
     
     async function handleSubmit() {
       if (password !== confirmPassword) {
@@ -19,14 +19,25 @@
         return;
       }
     
-      // TODO: Replace with actual API call
       try {
-        // Simulating a registration API call
-        const user = { id: Date.now(), username, email, platform };
-        auth.login(user);
-        navigate('/objectives');
+        const response = await fetch('/api/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, email, password, platform }),
+        });
+    
+        if (response.ok) {
+          const user = await response.json();
+          auth.login(user);
+          navigate('/objectives');
+        } else {
+          const error = await response.text();
+          alert(`Registration failed: ${error}`);
+        }
       } catch (error) {
-        alert('Registration failed');
+        alert('Registration failed: Network error');
       }
     }
     </script>

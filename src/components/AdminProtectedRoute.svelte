@@ -1,23 +1,23 @@
 <script lang="ts">
+    import { navigate } from "svelte-routing";
     import { auth } from '../stores/auth';
-    import { navigate } from 'svelte-routing';
     import { onMount } from 'svelte';
-    
-    let isAuthenticated = false;
+
+    let isAdmin = false;
     let isLoading = true;
-    
+
     onMount(() => {
         const unsubscribe = auth.subscribe(user => {
-            isAuthenticated = !!user;
+            isAdmin = user?.isAdmin || false;
             isLoading = false;
         });
 
         // Introduce a delay before redirecting
         const timeoutId = setTimeout(() => {
-            if (!isLoading && !isAuthenticated) {
-                navigate('/login', { replace: true });
+            if (!isLoading && !isAdmin) {
+                navigate("/", { replace: true });
             }
-        }, 500); // 500ms delay
+        }, 500); // Increased delay to 500ms
 
         return () => {
             unsubscribe();
@@ -25,11 +25,11 @@
         };
     });
 </script>
-    
+
 {#if isLoading}
     <p>Loading...</p>
-{:else if isAuthenticated}
+{:else if isAdmin}
     <slot />
 {:else}
-    <p>Redirecting to login...</p>
+    <p>Redirecting...</p>
 {/if}

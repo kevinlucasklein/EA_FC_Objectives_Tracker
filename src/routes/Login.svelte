@@ -6,14 +6,27 @@
     let password = '';
     
     async function handleSubmit() {
-      // TODO: Replace with actual API call
-      if (username === 'test' && password === 'password') {
-        auth.login({ id: 1, username });
-        navigate('/objectives');
-      } else {
-        alert('Invalid credentials');
-      }
+  try {
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      auth.login({ ...data.user, isAdmin: data.user.isAdmin });  // Make sure isAdmin is included
+      localStorage.setItem('token', data.token);
+      navigate('/objectives');
+
+    } else {
+      const error = await response.text();
+      alert(`Login failed: ${error}`);
     }
+  } catch (error) {
+    alert('Login failed: Network error');
+  }
+}
     </script>
     
     <form on:submit|preventDefault={handleSubmit}>
