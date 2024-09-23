@@ -9,6 +9,8 @@ import objectivesRoutes from './routes/objectivesRoutes';
 import requirementsRoutes from './routes/requirementsRoutes';
 import conditionsRoutes from './routes/conditionsRoutes';
 import countriesRoutes from './routes/countriesRoutes';
+import leaguesRoutes from './routes/leaguesRoutes';
+import teamsRoutes from './routes/teamsRoutes';
 
 export const router = Router();
 
@@ -31,6 +33,8 @@ router.use('/api/objectives', objectivesRoutes);
 router.use('/api/requirements', requirementsRoutes);
 router.use('/api/conditions', conditionsRoutes);
 router.use('/api/countries', countriesRoutes);
+router.use('/api/leagues', leaguesRoutes);
+router.use('/api/teams', teamsRoutes);
 
 // Authenticated user routes (not necessarily admin)
 router.use('/api', isAuthenticated);

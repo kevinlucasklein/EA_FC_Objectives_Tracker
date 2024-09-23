@@ -7,6 +7,8 @@
     import Requirements from "./Requirements.svelte";
     import Conditions from "./Conditions.svelte";
     import Countries from "./Countries.svelte";
+    import Leagues from "./Leagues.svelte";
+    import Teams from "./Teams.svelte";
   
     const activeTab = writable('rewards');
   
@@ -29,6 +31,8 @@
       <button type="button" class="tab" class:active={$activeTab === 'requirements'} on:click={() => setActiveTab('requirements')}>Requirements</button>
       <button type="button" class="tab" class:active={$activeTab === 'conditions'} on:click={() => setActiveTab('conditions')}>Conditions</button>
       <button type="button" class="tab" class:active={$activeTab === 'countries'} on:click={() => setActiveTab('countries')}>Countries</button>
+      <button type="button" class="tab" class:active={$activeTab === 'leagues'} on:click={() => setActiveTab('leagues')}>Leagues</button>
+      <button type="button" class="tab" class:active={$activeTab === 'teams'} on:click={() => setActiveTab('teams')}>Teams</button>
     </div>
     <div class="tab-content">
       {#if $activeTab === 'rewards'}
@@ -45,6 +49,10 @@
         <Conditions />
       {:else if $activeTab === 'countries'}
         <Countries />
+      {:else if $activeTab === 'leagues'}
+        <Leagues />
+      {:else if $activeTab === 'teams'}
+        <Teams />
       {/if}
     </div>
   </div>

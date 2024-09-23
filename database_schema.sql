@@ -60,6 +60,14 @@ CREATE TABLE Countries (
     Name VARCHAR(100)
 );
 
+-- Leagues table
+CREATE TABLE Leagues (
+    LeagueID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    Name VARCHAR(100),
+    CountryID INT,
+    FOREIGN KEY (CountryID) REFERENCES Countries(CountryID)
+);
+
 -- Teams table
 CREATE TABLE Teams (
     TeamID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
