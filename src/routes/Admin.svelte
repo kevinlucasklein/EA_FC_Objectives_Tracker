@@ -3,35 +3,17 @@
     import Rewards from "./Rewards.svelte";
     import ObjectiveTypes from "./ObjectiveTypes.svelte";
     import ObjectiveGroups from "./ObjectiveGroups.svelte";
+    import Objectives from "./Objectives.svelte";
   
-    // Create a writable store to keep track of the active tab
     const activeTab = writable('rewards');
   
-    // Function to set the active tab
     function setActiveTab(tab: string) {
       activeTab.set(tab);
     }
   </script>
   
   <style>
-    .tabs {
-      display: flex;
-      cursor: pointer;
-    }
-    .tab {
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-bottom: none;
-      background-color: #f1f1f1;
-    }
-    .tab.active {
-      background-color: #fff;
-      border-bottom: 1px solid #fff;
-    }
-    .tab-content {
-      border: 1px solid #ccc;
-      padding: 10px;
-    }
+    /* ... existing styles ... */
   </style>
   
   <div>
@@ -40,6 +22,7 @@
       <button type="button" class="tab" class:active={$activeTab === 'rewards'} on:click={() => setActiveTab('rewards')}>Rewards</button>
       <button type="button" class="tab" class:active={$activeTab === 'objectiveTypes'} on:click={() => setActiveTab('objectiveTypes')}>Objective Types</button>
       <button type="button" class="tab" class:active={$activeTab === 'objectiveGroups'} on:click={() => setActiveTab('objectiveGroups')}>Objective Groups</button>
+      <button type="button" class="tab" class:active={$activeTab === 'objectives'} on:click={() => setActiveTab('objectives')}>Objectives</button>
     </div>
     <div class="tab-content">
       {#if $activeTab === 'rewards'}
@@ -48,6 +31,8 @@
         <ObjectiveTypes />
       {:else if $activeTab === 'objectiveGroups'}
         <ObjectiveGroups />
+      {:else if $activeTab === 'objectives'}
+        <Objectives />
       {/if}
     </div>
   </div>
