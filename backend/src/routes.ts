@@ -3,7 +3,7 @@ import { register, login, validateToken } from './controllers/authController';
 import { createObjective, getObjectives } from './controllers/objectiveController';
 import { isAdmin, isAuthenticated } from './middleware/authMiddleware';
 import { setUser } from './middleware/setUser';
-import { getRewards, createReward } from './controllers/rewardsController';
+import rewardsRoutes from './routes/rewardsRoutes';
 
 export const router = Router();
 
@@ -18,8 +18,9 @@ router.use(setUser);
 router.use('/api', isAdmin);
 router.get('/api/check-admin', (req, res) => res.json({ isAdmin: true }));
 router.post('/api/objectives', createObjective);
-router.get('/api/rewards', getRewards);
-router.post('/api/rewards', createReward);
+
+// Use rewards routes
+router.use('/api/rewards', rewardsRoutes);
 
 // Authenticated user routes (not necessarily admin)
 router.use('/api', isAuthenticated);
