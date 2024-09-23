@@ -32,13 +32,13 @@ export const setUser = async (req: Request, res: Response, next: NextFunction) =
   if (!decoded) return next();
 
   const user = await fetchUserById(decoded.id);
-  if (user && user.isAdmin === decoded.isAdmin) {
+  if (user && user.isadmin === decoded.isAdmin) {
     (req as any).user = {
-      id: user.id,
+      userid: user.userid,
       username: user.username,
       email: user.email,
-      platform: user.platform,
-      isAdmin: user.isAdmin
+      gamingplatform: user.gamingplatform,
+      isadmin: user.isadmin
     };
   }
 

@@ -47,15 +47,21 @@ export const validateToken = async (req: Request, res: Response) => {
   if (!token) return res.status(400).json({ error: 'Token is required' });
 
   try {
+    console.log('Validating token:', token);
     const decoded = jwt.verify(token, JWT_SECRET) as { id: number, username: string, isAdmin: boolean };
+    console.log('Token decoded:', decoded);
     const user = await fetchUser('SELECT UserID, Username, Email, GamingPlatform, IsAdmin FROM Users WHERE UserID = $1', [decoded.id]);
-    if (!user) return res.status(401).json({ error: 'User not found' });
+    if (!user) {
+      console.log('User not found for ID:', decoded.id);
+      return res.status(401).json({ error: 'User not found' });
+    }
 
     res.json({ 
-      user: { id: user.userid, username: user.username, email: user.email, platform: user.gamingplatform, isAdmin: user.isadmin },
+      user: { userid: user.userid, username: user.username, email: user.email, gamingplatform: user.gamingplatform, isadmin: user.isadmin },
       token: generateToken(user)
     });
   } catch (error) {
+    console.error('Token validation error:', error);
     handleError(res, error, 'Token validation error:');
   }
 };

@@ -15,10 +15,10 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
 
 export const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
   const user = (req as any).user;
-  if (!user || !user.id) return handleUnauthorized(res);
+  if (!user || !user.userid) return handleUnauthorized(res);
 
   try {
-    const result = await pool.query('SELECT IsAdmin FROM Users WHERE UserID = $1', [user.id]);
+    const result = await pool.query('SELECT IsAdmin FROM Users WHERE UserID = $1', [user.userid]);
     result.rows.length > 0 && result.rows[0].isadmin ? next() : handleForbidden(res);
   } catch (error) {
     handleServerError(res, error, 'Error checking admin status:');

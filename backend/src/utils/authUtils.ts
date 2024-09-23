@@ -5,7 +5,7 @@ import { User } from '../types/user';
 export const JWT_SECRET = process.env.JWT_SECRET as string;
 
 export const generateToken = (user: User) => jwt.sign(
-  { id: user.id, username: user.username, isAdmin: user.isAdmin },
+  { id: user.userid, username: user.username, isAdmin: user.isadmin },
   JWT_SECRET,
   { expiresIn: '1d' }
 );

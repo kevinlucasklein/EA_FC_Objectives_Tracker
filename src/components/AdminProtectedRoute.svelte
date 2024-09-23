@@ -8,20 +8,19 @@
 
     onMount(() => {
         const unsubscribe = auth.subscribe(user => {
-            isAdmin = user?.isAdmin || false;
+            isAdmin = user?.isadmin || false;
             isLoading = false;
-        });
+            console.log('AdminProtectedRoute - User state:', { isAdmin, isLoading });
 
-        // Introduce a delay before redirecting
-        const timeoutId = setTimeout(() => {
+            // Only navigate if loading is complete and user is not an admin
             if (!isLoading && !isAdmin) {
+                console.log('AdminProtectedRoute - Navigating to home');
                 navigate("/", { replace: true });
             }
-        }, 500); // Increased delay to 500ms
+        });
 
         return () => {
             unsubscribe();
-            clearTimeout(timeoutId);
         };
     });
 </script>

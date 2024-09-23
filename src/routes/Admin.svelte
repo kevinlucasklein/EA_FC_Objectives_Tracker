@@ -52,7 +52,7 @@
     
     onMount(() => {
         const unsubscribe = auth.subscribe(user => {
-            isAdmin = user?.isAdmin || false;
+            isAdmin = user?.isadmin || false;
             isLoading = false;
             if (!isLoading && isAdmin) {
                 fetchObjectives();
