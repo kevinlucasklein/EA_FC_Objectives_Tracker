@@ -1,9 +1,7 @@
 <script lang="ts">
     import { writable } from 'svelte/store';
     import Rewards from "./Rewards.svelte";
-  
-    // Remove the unused export property 'url'
-    // export let url = "";
+    import ObjectiveTypes from "./ObjectiveTypes.svelte";
   
     // Create a writable store to keep track of the active tab
     const activeTab = writable('rewards');
@@ -39,12 +37,13 @@
     <h2>Admin Page</h2>
     <div class="tabs">
       <button type="button" class="tab" class:active={$activeTab === 'rewards'} on:click={() => setActiveTab('rewards')}>Rewards</button>
-      <!-- Add more tabs here if needed -->
+      <button type="button" class="tab" class:active={$activeTab === 'objectiveTypes'} on:click={() => setActiveTab('objectiveTypes')}>Objective Types</button>
     </div>
     <div class="tab-content">
       {#if $activeTab === 'rewards'}
-        <Rewards /> <!-- Show Rewards component when the Rewards tab is active -->
+        <Rewards />
+      {:else if $activeTab === 'objectiveTypes'}
+        <ObjectiveTypes />
       {/if}
-      <!-- Add more tab contents here if needed -->
     </div>
   </div>

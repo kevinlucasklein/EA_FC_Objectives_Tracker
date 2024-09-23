@@ -4,6 +4,7 @@ import { createObjective, getObjectives } from './controllers/objectiveControlle
 import { isAdmin, isAuthenticated } from './middleware/authMiddleware';
 import { setUser } from './middleware/setUser';
 import rewardsRoutes from './routes/rewardsRoutes';
+import objectiveTypesRoutes from './routes/objectiveTypesRoutes';
 
 export const router = Router();
 
@@ -21,6 +22,9 @@ router.post('/api/objectives', createObjective);
 
 // Use rewards routes
 router.use('/api/rewards', rewardsRoutes);
+
+// Use objective types routes
+router.use('/api/objectivetypes', objectiveTypesRoutes);
 
 // Authenticated user routes (not necessarily admin)
 router.use('/api', isAuthenticated);
