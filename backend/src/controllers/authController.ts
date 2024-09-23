@@ -2,22 +2,10 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { fetchUser } from '../utils/dbUtils';
-import { User } from '../types/user'; 
+import { generateToken, handleError, JWT_SECRET } from '../utils/authUtils';
 
 const PEPPER = process.env.PASSWORD_PEPPER;
 const SALT_ROUNDS = 12;
-const JWT_SECRET = process.env.JWT_SECRET;
-
-const generateToken = (user: User) => jwt.sign(
-  { id: user.id, username: user.username, isAdmin: user.isAdmin },
-  JWT_SECRET as string,
-  { expiresIn: '1d' }
-);
-
-const handleError = (res: Response, error: any, message: string) => {
-  console.error(message, error);
-  res.status(500).json({ error: 'Server error' });
-};
 
 export const register = async (req: Request, res: Response) => {
   const { username, email, password, platform } = req.body;
@@ -59,7 +47,7 @@ export const validateToken = async (req: Request, res: Response) => {
   if (!token) return res.status(400).json({ error: 'Token is required' });
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET as string) as { id: number, username: string, isAdmin: boolean };
+    const decoded = jwt.verify(token, JWT_SECRET) as { id: number, username: string, isAdmin: boolean };
     const user = await fetchUser('SELECT UserID, Username, Email, GamingPlatform, IsAdmin FROM Users WHERE UserID = $1', [decoded.id]);
     if (!user) return res.status(401).json({ error: 'User not found' });
 
