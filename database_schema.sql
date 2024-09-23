@@ -171,6 +171,43 @@ CREATE TABLE PlayerMultiMatchProgress (
     FOREIGN KEY (MultiMatchID) REFERENCES MultiMatchRequirements(MultiMatchID)
 );
 
+-- Pack Rewards table
+CREATE TABLE PackRewards (
+    PackRewardID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    RewardID INT REFERENCES Rewards(RewardID),
+    PackType VARCHAR(50)
+);
+
+-- Coin Rewards table
+CREATE TABLE CoinRewards (
+    CoinRewardID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    RewardID INT REFERENCES Rewards(RewardID),
+    Amount INT
+);
+
+-- XP Rewards table
+CREATE TABLE XPRewards (
+    XPRewardID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    RewardID INT REFERENCES Rewards(RewardID),
+    Amount INT
+);
+
+-- Trophy Rewards table
+CREATE TABLE TrophyRewards (
+    TrophyRewardID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    RewardID INT REFERENCES Rewards(RewardID),
+    TrophyType VARCHAR(50)
+);
+
+-- Player Items table (for future use)
+CREATE TABLE PlayerItems (
+    PlayerItemID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    Name VARCHAR(100),
+    Position VARCHAR(10),
+    Rating INT,
+    -- Add other relevant fields
+);
+
 -- Create Views
 
 -- GroupCompletionStatus view

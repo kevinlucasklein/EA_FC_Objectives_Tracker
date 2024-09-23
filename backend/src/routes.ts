@@ -3,6 +3,7 @@ import { register, login, validateToken } from './controllers/authController';
 import { createObjective, getObjectives } from './controllers/objectiveController';
 import { isAdmin, isAuthenticated } from './middleware/authMiddleware';
 import { setUser } from './middleware/setUser';
+import { getRewards, createReward } from './controllers/rewardsController';
 
 export const router = Router();
 
@@ -22,4 +23,6 @@ router.post('/api/objectives', isAdmin, createObjective);
 router.get('/api/objectives', isAuthenticated, getObjectives);
 
 router.post('/api/validate-token', validateToken);
+router.get('/api/rewards', isAdmin, getRewards);
+router.post('/api/rewards', isAdmin, createReward);
 
