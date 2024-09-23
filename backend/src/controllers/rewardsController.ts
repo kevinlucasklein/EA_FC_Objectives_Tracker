@@ -1,26 +1,15 @@
 import { Request, Response } from 'express';
-import { pool } from '../db';
+import { handleQuery } from '../utils/dbUtils';
 
 export const getRewards = async (req: Request, res: Response) => {
-    try {
-        const result = await pool.query('SELECT * FROM Rewards ORDER BY RewardID');
-        res.json(result.rows);
-    } catch (error) {
-        console.error('Error fetching rewards:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
+    const result = await handleQuery(res, 'SELECT * FROM Rewards ORDER BY RewardID');
+    if (result) res.json(result);
 };
 
 export const createReward = async (req: Request, res: Response) => {
     const { type, value, description, rarity } = req.body;
-    try {
-        const result = await pool.query(
-            'INSERT INTO Rewards (Type, Value, Description, Rarity) VALUES ($1, $2, $3, $4) RETURNING *',
-            [type, value, description, rarity]
-        );
-        res.status(201).json(result.rows[0]);
-    } catch (error) {
-        console.error('Error creating reward:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
+    const query = 'INSERT INTO Rewards (Type, Value, Description, Rarity) VALUES ($1, $2, $3, $4) RETURNING *';
+    const params = [type, value, description, rarity];
+    const result = await handleQuery(res, query, params);
+    if (result) res.status(201).json(result[0]);
 };

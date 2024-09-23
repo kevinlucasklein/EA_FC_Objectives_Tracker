@@ -7,6 +7,7 @@ import { getRewards, createReward } from './controllers/rewardsController';
 
 export const router = Router();
 
+// Public routes
 router.post('/api/register', register);
 router.post('/api/login', login);
 
@@ -14,15 +15,13 @@ router.post('/api/login', login);
 router.use(setUser);
 
 // Admin-only routes
-router.get('/api/check-admin', isAdmin, (req, res) => {
-  res.json({ isAdmin: true });
-});
-router.post('/api/objectives', isAdmin, createObjective);
+router.use('/api', isAdmin);
+router.get('/api/check-admin', (req, res) => res.json({ isAdmin: true }));
+router.post('/api/objectives', createObjective);
+router.get('/api/rewards', getRewards);
+router.post('/api/rewards', createReward);
 
 // Authenticated user routes (not necessarily admin)
-router.get('/api/objectives', isAuthenticated, getObjectives);
-
+router.use('/api', isAuthenticated);
+router.get('/api/objectives', getObjectives);
 router.post('/api/validate-token', validateToken);
-router.get('/api/rewards', isAdmin, getRewards);
-router.post('/api/rewards', isAdmin, createReward);
-
