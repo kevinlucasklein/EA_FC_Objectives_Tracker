@@ -2,6 +2,7 @@
     import { writable } from 'svelte/store';
     import Rewards from "./Rewards.svelte";
     import ObjectiveTypes from "./ObjectiveTypes.svelte";
+    import ObjectiveGroups from "./ObjectiveGroups.svelte";
   
     // Create a writable store to keep track of the active tab
     const activeTab = writable('rewards');
@@ -38,12 +39,15 @@
     <div class="tabs">
       <button type="button" class="tab" class:active={$activeTab === 'rewards'} on:click={() => setActiveTab('rewards')}>Rewards</button>
       <button type="button" class="tab" class:active={$activeTab === 'objectiveTypes'} on:click={() => setActiveTab('objectiveTypes')}>Objective Types</button>
+      <button type="button" class="tab" class:active={$activeTab === 'objectiveGroups'} on:click={() => setActiveTab('objectiveGroups')}>Objective Groups</button>
     </div>
     <div class="tab-content">
       {#if $activeTab === 'rewards'}
         <Rewards />
       {:else if $activeTab === 'objectiveTypes'}
         <ObjectiveTypes />
+      {:else if $activeTab === 'objectiveGroups'}
+        <ObjectiveGroups />
       {/if}
     </div>
   </div>

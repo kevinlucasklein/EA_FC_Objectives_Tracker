@@ -5,6 +5,7 @@ import { isAdmin, isAuthenticated } from './middleware/authMiddleware';
 import { setUser } from './middleware/setUser';
 import rewardsRoutes from './routes/rewardsRoutes';
 import objectiveTypesRoutes from './routes/objectiveTypesRoutes';
+import objectiveGroupsRoutes from './routes/objectiveGroupsRoutes';
 
 export const router = Router();
 
@@ -25,6 +26,9 @@ router.use('/api/rewards', rewardsRoutes);
 
 // Use objective types routes
 router.use('/api/objectivetypes', objectiveTypesRoutes);
+
+// Use objective groups routes
+router.use('/api/objectivegroups', objectiveGroupsRoutes);
 
 // Authenticated user routes (not necessarily admin)
 router.use('/api', isAuthenticated);
