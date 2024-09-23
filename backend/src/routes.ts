@@ -6,6 +6,7 @@ import rewardsRoutes from './routes/rewardsRoutes';
 import objectiveTypesRoutes from './routes/objectiveTypesRoutes';
 import objectiveGroupsRoutes from './routes/objectiveGroupsRoutes';
 import objectivesRoutes from './routes/objectivesRoutes';
+import requirementsRoutes from './routes/requirementsRoutes';
 
 export const router = Router();
 
@@ -25,6 +26,7 @@ router.use('/api/rewards', rewardsRoutes);
 router.use('/api/objectivetypes', objectiveTypesRoutes);
 router.use('/api/objectivegroups', objectiveGroupsRoutes);
 router.use('/api/objectives', objectivesRoutes);
+router.use('/api/requirements', requirementsRoutes);
 
 // Authenticated user routes (not necessarily admin)
 router.use('/api', isAuthenticated);
