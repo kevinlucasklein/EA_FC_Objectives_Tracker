@@ -11,6 +11,13 @@ import conditionsRoutes from './routes/conditionsRoutes';
 import countriesRoutes from './routes/countriesRoutes';
 import leaguesRoutes from './routes/leaguesRoutes';
 import teamsRoutes from './routes/teamsRoutes';
+import playerAttributesRoutes from './routes/playerAttributesRoutes';
+import playerAttributeRatingsRoutes from './routes/playerAttributeRatingsRoutes';
+import positionsRoutes from './routes/positionsRoutes';
+import playersRoutes from './routes/playersRoutes';
+import feetRoutes from './routes/feetRoutes';
+import bodyTypesRoutes from './routes/bodyTypesRoutes';
+import acceleRATETypesRoutes from './routes/acceleRATETypesRoutes';
 
 export const router = Router();
 
@@ -35,6 +42,13 @@ router.use('/api/conditions', conditionsRoutes);
 router.use('/api/countries', countriesRoutes);
 router.use('/api/leagues', leaguesRoutes);
 router.use('/api/teams', teamsRoutes);
+router.use('/api/playerattributes', playerAttributesRoutes);
+router.use('/api/playerattributeratings', playerAttributeRatingsRoutes);
+router.use('/api/positions', positionsRoutes);
+router.use('/api/players', playersRoutes);
+router.use('/api/feet', feetRoutes);
+router.use('/api/bodytypes', bodyTypesRoutes);
+router.use('/api/acceleratetypes', acceleRATETypesRoutes);
 
 // Authenticated user routes (not necessarily admin)
 router.use('/api', isAuthenticated);

@@ -207,13 +207,21 @@ CREATE TABLE TrophyRewards (
     TrophyType VARCHAR(50)
 );
 
--- Player Items table (for future use)
-CREATE TABLE PlayerItems (
-    PlayerItemID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    Name VARCHAR(100),
-    Position VARCHAR(10),
+-- Positions table
+CREATE TABLE Positions (
+    PositionID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    Name VARCHAR(50) UNIQUE NOT NULL
+);
+
+-- Players table (formerly PlayerItems)
+CREATE TABLE Players (
+    PlayerID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    PositionID INT,
     Rating INT,
-    -- Add other relevant fields
+    TeamID INT,
+    FOREIGN KEY (PositionID) REFERENCES Positions(PositionID),
+    FOREIGN KEY (TeamID) REFERENCES Teams(TeamID)
 );
 
 -- Create Views
