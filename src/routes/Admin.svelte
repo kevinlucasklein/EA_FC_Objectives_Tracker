@@ -5,6 +5,7 @@
     import ObjectiveGroups from "./ObjectiveGroups.svelte";
     import Objectives from "./Objectives.svelte";
     import Requirements from "./Requirements.svelte";
+    import Conditions from "./Conditions.svelte";
   
     const activeTab = writable('rewards');
   
@@ -25,6 +26,7 @@
       <button type="button" class="tab" class:active={$activeTab === 'objectiveGroups'} on:click={() => setActiveTab('objectiveGroups')}>Objective Groups</button>
       <button type="button" class="tab" class:active={$activeTab === 'objectives'} on:click={() => setActiveTab('objectives')}>Objectives</button>
       <button type="button" class="tab" class:active={$activeTab === 'requirements'} on:click={() => setActiveTab('requirements')}>Requirements</button>
+      <button type="button" class="tab" class:active={$activeTab === 'conditions'} on:click={() => setActiveTab('conditions')}>Conditions</button>
     </div>
     <div class="tab-content">
       {#if $activeTab === 'rewards'}
@@ -37,6 +39,8 @@
         <Objectives />
       {:else if $activeTab === 'requirements'}
         <Requirements />
+      {:else if $activeTab === 'conditions'}
+        <Conditions />
       {/if}
     </div>
   </div>

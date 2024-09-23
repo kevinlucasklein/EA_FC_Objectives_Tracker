@@ -7,6 +7,7 @@ import objectiveTypesRoutes from './routes/objectiveTypesRoutes';
 import objectiveGroupsRoutes from './routes/objectiveGroupsRoutes';
 import objectivesRoutes from './routes/objectivesRoutes';
 import requirementsRoutes from './routes/requirementsRoutes';
+import conditionsRoutes from './routes/conditionsRoutes';
 
 export const router = Router();
 
@@ -27,6 +28,7 @@ router.use('/api/objectivetypes', objectiveTypesRoutes);
 router.use('/api/objectivegroups', objectiveGroupsRoutes);
 router.use('/api/objectives', objectivesRoutes);
 router.use('/api/requirements', requirementsRoutes);
+router.use('/api/conditions', conditionsRoutes);
 
 // Authenticated user routes (not necessarily admin)
 router.use('/api', isAuthenticated);
